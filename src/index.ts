@@ -1,25 +1,16 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Bind resources to your worker in `wrangler.toml`. After adding bindings, a type definition for the
- * `Env` object can be regenerated with `npm run cf-typegen`.
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
+import {Board, BoardState, BoardStatus, Player, PlayerO} from "./types"
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+        // initialize a new game
         if(request.method === "GET") {
-            const board = getNewBoard()
+            const board = getBoard()
             return new Response(JSON.stringify(board));
         }
 
+        // send a move; get the next state
         if(request.method === "POST") {
-            const board = getNewBoard()
+            const board = getBoard()
             return new Response(JSON.stringify(board));
         }
 
@@ -27,32 +18,26 @@ export default {
 	},
 };
 
-export type Board = {
-    // the dimension of the board
-    // currently always 3, but could be extendended
-    // boards are square, and have odd dimension (otherwise diagonals won't work)
-    size: 3,
-    /**
-     * data is a single-dimenional array where rows "wrap" after size.
-     * note: could optimize using binary
-     * e.g. if size is 3
-     * [
-     *  0, 1 ,2
-     *  3, 4, 5,
-     *  6, 7, 8
-     * ]
-     */ 
-    state: BoardState
+export function getBoard(state: BoardState | undefined = Array(3 * 3).fill(null), status: BoardStatus = "active"): Board {
+    return  { size: 3, state, status }
 }
-type BoardState = (Player | null)[]
 
-// x = 1, o = 0, undefined = empty
-export type Player = typeof PlayerX | typeof PlayerO;
-export const PlayerX = 1;
-export const PlayerO = 0;
+export function playRandomMove({state}: Board): Board {
+    const possibleMoves = state.map((value, index) => {
+        return value === null ? index : undefined
+    }).filter((indexValue): indexValue is number => indexValue !== undefined)
 
-export function getNewBoard(state: BoardState | undefined = Array(3 * 3).fill(null)): Board {
-    return  { size: 3, state }
+    const move = Math.floor(Math.random() * possibleMoves.length)
+    const moveIndex = possibleMoves[move]
+    const newState = [...state]
+    newState[moveIndex] = PlayerO
+
+    return getBoard(newState)
+}
+
+export function checkDrawCondition({state}: Board): boolean {
+    const movesLeft = state.find(value => value == null)
+    return movesLeft === undefined
 }
 
 // cloud replace by equality checks of known board wins; would bloat program for larger boards, though
