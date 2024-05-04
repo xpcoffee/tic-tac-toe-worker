@@ -22,7 +22,7 @@ export function getBoard(state: BoardState | undefined = Array(3 * 3).fill(null)
     return { size: 3, state, status }
 }
 
-export function playRandomMove({ state }: Board): Board {
+export function playRandomMove({ state }: Board, player: Player = PlayerO): Board {
     const possibleMoves = state.map((value, index) => {
         return value === null ? index : undefined
     }).filter((indexValue): indexValue is number => indexValue !== undefined)
@@ -30,7 +30,7 @@ export function playRandomMove({ state }: Board): Board {
 
     const moveBoardIndex = possibleMoves[move]
     const newState = [...state]
-    newState[moveBoardIndex] = PlayerO
+    newState[moveBoardIndex] = player
 
     return getBoard(newState)
 }

@@ -13,14 +13,16 @@ describe('tic-tac-toe worker', () => {
 
     describe("playing moves", () => {
         it("will play random moves", () => {
+            const player = PlayerX
+            const otherPlayer = PlayerO
             const moves = 3
             let board = getBoard();
             for (let i = 0; i < moves; i++) {
-                board = playRandomMove(board)
+                board = playRandomMove(board, player)
             }
 
-            const movesPlayed = board.state.filter(value => value === PlayerO)
-            const movesThatShouldNotBePlayed = board.state.filter(value => value === PlayerX)
+            const movesPlayed = board.state.filter(value => value === player)
+            const movesThatShouldNotBePlayed = board.state.filter(value => value === otherPlayer)
 
             expect(movesPlayed.length).toEqual(moves)
             expect(movesThatShouldNotBePlayed.length).toEqual(0)
