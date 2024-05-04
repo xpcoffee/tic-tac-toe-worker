@@ -1,15 +1,33 @@
 import { SELF } from 'cloudflare:test';
 import { describe, it, expect } from 'vitest';
-import { checkDrawCondition, checkWinCondition, getBoard, playRandomMove } from "../src"
-import { PlayerX, PlayerO } from "../src/types"
+import { MoveRequest, checkDrawCondition, checkWinCondition, getBoard, playRandomMove } from "../src"
+import { PlayerX, PlayerO, Player } from "../src/types"
 
 describe('tic-tac-toe worker', () => {
-    it('responds with an empty game state on fetch', async () => {
-        const expected = JSON.stringify(getBoard())
+    it('can play a game', async () => {
+        const expectedEmptyBoard = getBoard()
+        let player: Player = PlayerX
 
-        const response = await SELF.fetch('https://haha.com');
-        expect(await response.text()).toEqual(expected);
+        let gameState: any = await (await SELF.fetch('https://worker.com')).json();
+        expect(gameState).toEqual(expectedEmptyBoard);
+
+        for (let move = 0; move < 9; move++) {
+            if (gameState.status !== "active") {
+                break
+            }
+            const moveRequest: MoveRequest = {
+                board: gameState,
+                playerToMove: player
+            }
+            const response = await SELF.fetch('https://worker.com', { method: "POST", body: JSON.stringify(moveRequest), headers: { ["content-type"]: "application/json" } })
+            gameState = await (response).json();
+            player = player === PlayerX ? PlayerO : PlayerX
+        }
+
+        expect(gameState.status).not.toEqual("active");
     });
+
+
 
     describe("playing moves", () => {
         it("will play random moves", () => {

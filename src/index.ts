@@ -1,4 +1,4 @@
-import { Board, BoardState, BoardStatus, Player, PlayerO } from "./types"
+import { Board, BoardState, BoardStatus, Player, PlayerO, PlayerX } from "./types"
 
 export default {
     async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -10,13 +10,42 @@ export default {
 
         // send a move; get the next state
         if (request.method === "POST") {
-            const board = getBoard()
+            const contentType = request.headers.get("content-type");
+            if (!contentType?.includes("application/json")) {
+                return new Response("Bad request. Expecting 'application/json'.", { status: 400 })
+            }
+
+            const requestPayload = await request.json()
+            if (!(requestPayload !== null && typeof requestPayload === "object" && isMoveRequest(requestPayload))) {
+                return new Response("Bad request. Board not valid.", { status: 400 })
+            }
+
+            let board = playRandomMove(requestPayload.board, requestPayload.playerToMove)
+
+            const winner = checkWinCondition(board)
+            if (winner == PlayerO) {
+                board.status = "winner O"
+            } else if (winner == PlayerX) {
+                board.status = "winner X"
+            } else if (checkDrawCondition(board)) {
+                board.status = "draw"
+            }
+
             return new Response(JSON.stringify(board));
         }
 
         return new Response("unkown operation", { status: 404 })
     },
 };
+
+export type MoveRequest = {
+    playerToMove: Player,
+    board: Board,
+}
+// TODO actually do validation
+function isMoveRequest(obj: unknown): obj is MoveRequest {
+    return true
+}
 
 export function getBoard(state: BoardState | undefined = Array(3 * 3).fill(null), status: BoardStatus = "active"): Board {
     return { size: 3, state, status }
