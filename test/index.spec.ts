@@ -1,7 +1,8 @@
 import { SELF } from 'cloudflare:test';
 import { describe, it, expect } from 'vitest';
-import { MoveRequest, checkDrawCondition, checkWinCondition, getBoard, playRandomMove } from "../src"
 import { PlayerX, PlayerO, Player } from "../src/types"
+import { getBoard, checkDrawCondition, checkWinCondition } from '../src/boardStateUtils';
+import { MoveRequest, playRandomMove } from '../src/playerLogic';
 
 describe('tic-tac-toe worker', () => {
     it('can play a game', async () => {
@@ -36,7 +37,7 @@ describe('tic-tac-toe worker', () => {
             const moves = 3
             let board = getBoard();
             for (let i = 0; i < moves; i++) {
-                board = playRandomMove(board, player)
+                board = playRandomMove({ board, playerToMove: player })
             }
 
             const movesPlayed = board.state.filter(value => value === player)
