@@ -1,6 +1,5 @@
-import { checkDrawCondition, checkWinCondition, determineBoardStatus, getBoard } from "./boardStateUtils";
+import { determineBoardStatus, getBoard } from "./boardStateUtils";
 import { isMoveRequest, playRandomMove } from "./playerLogic";
-import { PlayerO, PlayerX } from "./types"
 
 export default {
     async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
