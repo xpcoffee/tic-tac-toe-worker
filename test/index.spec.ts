@@ -1,7 +1,7 @@
 import { SELF } from 'cloudflare:test';
 import { describe, it, expect } from 'vitest';
 import { PlayerX, PlayerO, Player } from "../src/types"
-import { getBoard, checkDrawCondition, checkWinCondition } from '../src/boardStateUtils';
+import { getBoard, checkDrawCondition, checkWinCondition } from '../src/rulesLogic';
 import { MoveRequest, playRandomMove } from '../src/playerLogic';
 
 describe('tic-tac-toe worker', () => {
@@ -22,6 +22,8 @@ describe('tic-tac-toe worker', () => {
             }
             const response = await SELF.fetch('https://worker.com', { method: "POST", body: JSON.stringify(moveRequest), headers: { ["content-type"]: "application/json" } })
             gameState = await (response).json();
+
+            // alternate between players
             player = player === PlayerX ? PlayerO : PlayerX
         }
 

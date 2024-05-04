@@ -1,5 +1,14 @@
 import { Board, BoardState, BoardStatus, Player, PlayerO, PlayerX } from "./types"
 
+
+/**
+ * This file holds logic used to understand, validate and work with tic-tac-toe board state (game rules).
+ * 
+ * TODO
+ *  - validation of valid board states (make sure a board state has correct number of moves of each player)
+ *  - check for a draw earlier (might notice draws a few moves before the board is full)
+ */
+
 export function getBoard(state: BoardState | undefined = Array(3 * 3).fill(null), status: BoardStatus = "active"): Board {
     return { size: 3, state, status }
 }

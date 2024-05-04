@@ -1,4 +1,4 @@
-import { determineBoardStatus, getBoard } from "./boardStateUtils";
+import { determineBoardStatus, getBoard } from "./rulesLogic";
 import { isMoveRequest, playRandomMove } from "./playerLogic";
 
 export default {

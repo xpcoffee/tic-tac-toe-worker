@@ -1,5 +1,9 @@
-import { getBoard } from "./boardStateUtils"
+import { getBoard } from "./rulesLogic"
 import { Board, Player } from "./types"
+
+/**
+ * This file holds logic used to decide on and play moves on a board.
+ */
 
 export function playRandomMove({ board: { state }, playerToMove: player }: MoveRequest): Board {
     const possibleMoves = state.map((value, index) => {
