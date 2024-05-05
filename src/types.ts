@@ -5,7 +5,7 @@ export type Board = {
     size: 3,
     /**
      * data is a single-dimenional array where rows "wrap" after size.
-     * note: could optimize using binary
+     * note: could probably optimize using binary (though would need to consider how to represent "empty" state")
      * e.g. if size is 3
      * [
      *  0, 1 ,2
