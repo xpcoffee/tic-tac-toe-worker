@@ -8,8 +8,9 @@ It takes in state and a request and provides the resulting state.
 ### `POST`- Ask the server to play the next move
 
 **Request** 
-Header: `content-type: application/json`
-Body: JSON payload of the game state and the player that the server needs make the next move for.
+
+ - Header: `content-type: application/json`
+ - Body: JSON payload of the game state and the player that the server needs make the next move for.
 
 ```typescript
 {
@@ -21,16 +22,16 @@ Body: JSON payload of the game state and the player that the server needs make t
 ```
 
 **Response** 
-Header: `content-type: application/json`
-Body: JSON payload.
+
+ - Header: `content-type: application/json`
+ - Body: JSON payload.
 
 ```typescript
 {
-    playerToMove: 0 | 1, // the player which needs to take the next
     board: {
         size: 3, // the size (dimension) of the board
         state: (0|1|null)[], // the state of the board
-        status: "active" // the status of the board
+        status: "active" | "draw" | "winner X" | "winner O" // the status of the board
     }
 }
 ```
