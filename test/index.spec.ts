@@ -27,7 +27,18 @@ describe('tic-tac-toe worker', () => {
         expect(gameState.status).not.toEqual("active");
     });
 
+    it("returns a win condition without playing an extra move", async () => {
+        const boardWithWinner = getBoard([1, null, null, 1, null, null, 1, 0, 0])
+        const moveRequest: MoveRequest = {
+            board: boardWithWinner,
+            playerToMove: PlayerO,
+        }
 
+        const response = await SELF.fetch('https://worker.com', { method: "POST", body: JSON.stringify(moveRequest), headers: { ["content-type"]: "application/json" } })
+        const result: any = await (response).json();
+
+        expect(result).toEqual({ ...boardWithWinner, status: "winner X" })
+    })
 
     describe("playing moves", () => {
         it("will play random moves", () => {
@@ -97,6 +108,7 @@ describe('tic-tac-toe worker', () => {
                 ]
             )
             expect(checkWinCondition(board)).toEqual(PlayerO)
+
         })
 
         it("returns the winning player for a left diagonal win", () => {
