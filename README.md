@@ -5,6 +5,25 @@ A Cloudflare worker which serves as the backend for a tic-tac-toe game.
 **Note: this worker is currently stateless.** 
 It takes in state and a request and provides the resulting state.
 
+## Development
+
+Install dependencies
+```
+npm install
+```
+
+Run the worker locally
+```
+npm run start
+```
+
+Deploy the worker
+```
+npx wrangler deploy
+```
+
+## API
+
 ### `POST`- Ask the server to play the next move
 
 **Request** 
