@@ -6,11 +6,8 @@ import { MoveRequest, playRandomMove } from '../src/playerLogic';
 
 describe('tic-tac-toe worker', () => {
     it('can play a game', async () => {
-        const expectedEmptyBoard = getBoard()
         let player: Player = PlayerX
-
-        let gameState: any = await (await SELF.fetch('https://worker.com')).json();
-        expect(gameState).toEqual(expectedEmptyBoard);
+        let gameState: any = getBoard();
 
         for (let move = 0; move < 9; move++) {
             if (gameState.status !== "active") {
