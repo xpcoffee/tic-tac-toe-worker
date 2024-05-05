@@ -13,9 +13,18 @@ export default {
             return new Response("Bad request. Board not valid.", { status: 400 })
         }
 
+        // check end condition before playing
+        const currentStatus = determineBoardStatus(requestPayload.board)
+        if (currentStatus !== "active") {
+            return new Response(JSON.stringify({
+                ...requestPayload.board,
+                status: currentStatus
+            }));
+        }
+
+        // play move
         let board = playRandomMove(requestPayload)
         board.status = determineBoardStatus(board)
-
         return new Response(JSON.stringify(board));
     },
 };
